@@ -1,0 +1,391 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<link rel="icon" href="data:,">
+<title>Japan Trip Calendar — Nov 25 – Dec 11, 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+JP:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme:dark;
+  --bg:#171512; --panel:#201d1a; --panel2:#262320; --card:#2b2825; --card2:#322f2b;
+  --ink:#f4efe8; --muted:#a8a29a; --faint:#7d786f; --line:#36322d; --line2:#2a2724;
+  --red:#e05244; --red-bg:#8c2b20; --red-soft:#3a2320;
+  --amber:#e8a33d; --amber-soft:#33291a;
+  --teal:#2dd4bf; --green:#4ade80; --yellow:#facc15;
+  --hour:68px; --start:6;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,sans-serif;line-height:1.4;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+.wrap{max-width:1560px;margin:0 auto;padding:18px 14px 44px}
+/* header */
+.tophead{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end;justify-content:space-between}
+h1{font-size:clamp(24px,3.4vw,36px);font-weight:900;letter-spacing:-.02em;margin:0;line-height:1.05}
+h1 .jp{font-family:"Noto Sans JP",sans-serif;display:block;font-size:12px;letter-spacing:.22em;color:var(--red);font-weight:700;margin-bottom:6px}
+.sub{color:var(--muted);font-size:13.5px;max-width:760px;margin:8px 0 0}
+.sub strong{color:var(--ink)}
+.alerts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0 4px}
+@media(max-width:820px){.alerts{grid-template-columns:1fr}}
+.alert{padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);display:flex;gap:10px;font-size:13px}
+.alert p{margin:2px 0 0;color:var(--muted)} .alert p strong{color:var(--ink)}
+.alert.warn{border-color:#7a352b;background:var(--red-soft)} .alert.warn b{color:#ff9a8a}
+.alert.ok b{color:var(--teal)}
+/* stays strip */
+.stays{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px 0 4px}
+@media(max-width:820px){.stays{grid-template-columns:1fr 1fr}}
+.stay{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c);border-radius:10px;padding:9px 11px}
+.stay small{color:var(--muted);font-weight:800;letter-spacing:.06em;text-transform:uppercase;font-size:10px}
+.stay div{font-weight:800;font-size:13.5px;line-height:1.25;margin-top:2px}
+.stay span{font-size:11.5px;color:var(--muted)}
+/* toolbar — like the reference */
+.toolbar{position:sticky;top:0;z-index:30;background:var(--bg);padding:12px 0 10px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;border-bottom:1px solid var(--line2)}
+.pill{border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:999px;padding:9px 16px;font-weight:700;font-size:13.5px;min-height:40px;white-space:nowrap}
+.pill:hover{border-color:var(--muted)}
+.pill[aria-pressed="true"]{background:#f4efe8;color:#171512;border-color:#f4efe8}
+.pill.toggle[aria-pressed="true"]{background:#f4efe8;color:#171512}
+.toolbar .spacer{flex:1}
+.legend{display:flex;flex-wrap:wrap;gap:14px;align-items:center;padding:10px 2px 12px;font-size:12px;color:var(--muted);font-weight:600}
+.legend .sw{display:inline-block;width:22px;height:14px;border-radius:4px;vertical-align:-2px;margin-right:6px;background:var(--card2);border:1px solid var(--line);border-left:5px solid var(--muted)}
+.legend .sw.booked{background:var(--red-bg);border-color:#a03a2c;border-left-color:var(--red)}
+.legend .sw.opt{background:transparent;border:1.5px dashed var(--amber)}
+.legend .sw.paid{border-left-color:var(--yellow)}
+/* calendar grid */
+.cal-shell{border:1px solid var(--line);border-radius:14px;background:var(--panel);overflow:hidden}
+.cal-scroll{overflow-x:auto;overflow-y:hidden}
+.cal{min-width:calc(52px + var(--n,7) * 218px)}
+.cal-head{display:grid;grid-template-columns:52px repeat(var(--n,7),1fr);border-bottom:1px solid var(--line);background:var(--panel)}
+.cal-head .gutter{border-right:1px solid var(--line2)}
+.dhead{padding:12px 12px 10px;border-right:1px solid var(--line2);min-width:0;cursor:pointer;background:none;border-top:0;border-bottom:0;border-left:0;text-align:left;color:var(--ink);width:100%}
+.dhead:last-child{border-right:0}
+.dhead:hover{background:var(--panel2)}
+.dhead.selected{background:var(--panel2);box-shadow:inset 0 -3px 0 var(--red)}
+.dhead .dow{font-size:12px;font-weight:800;letter-spacing:.05em;color:var(--muted);text-transform:uppercase;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.dhead .dot{width:9px;height:9px;border-radius:99px;background:var(--ac);flex:0 0 auto}
+.pace{font-size:10px;font-weight:900;letter-spacing:.05em;padding:3px 8px;border-radius:999px;text-transform:uppercase}
+.pace.light{background:#1d2f22;color:var(--green)} .pace.medium{background:#33300f;color:var(--yellow)}
+.pace.heavy{background:#3a2118;color:#fb923c} .pace.recovery{background:#123330;color:var(--teal)}
+.pace.travel{background:#2c2c30;color:#c7c2b8}
+.dhead .dtitle{font-size:16.5px;font-weight:800;line-height:1.2;margin-top:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dhead .sleep{font-size:11px;color:var(--faint);font-weight:600;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dhead .clash{margin-top:6px;font-size:10.5px;font-weight:800;color:#ffb4a8;background:#4a241e;border:1px solid #7a352b;border-radius:7px;padding:4px 7px;line-height:1.3}
+.cal-body{display:grid;grid-template-columns:52px repeat(var(--n,7),1fr);height:calc(var(--hour) * 17)}
+.gutter{position:relative;border-right:1px solid var(--line2)}
+.gutter span{position:absolute;right:8px;transform:translateY(-50%);font-size:11px;color:var(--faint);font-weight:600;white-space:nowrap}
+.col{position:relative;border-right:1px solid var(--line2);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent calc(var(--hour) - 1px),var(--line2) calc(var(--hour) - 1px),var(--line2) var(--hour))}
+.col:last-child{border-right:0}
+.ev{position:absolute;left:6px;right:6px;background:var(--card);border:1px solid #3d3a36;border-left:5px solid var(--ac);border-radius:10px;padding:7px 9px;overflow:hidden;text-align:left;color:var(--ink);width:calc(100% - 12px)}
+.ev:hover{background:var(--card2)}
+.ev .tm{font-size:11px;color:var(--muted);font-weight:600;letter-spacing:.01em}
+.ev .tt{font-size:13.5px;font-weight:700;line-height:1.25;margin-top:1px}
+.ev .badges{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px}
+.bdg{font-size:9.5px;font-weight:900;letter-spacing:.04em;padding:2.5px 7px;border-radius:999px;text-transform:uppercase}
+.bdg.cut{background:#4a3410;color:#fbbf24;border:1px dashed #92600f}
+.bdg.opt{background:transparent;color:var(--amber);border:1px dashed var(--amber)}
+.bdg.yen{background:#2e2b26;color:#fde68a;border:1px solid #57534a}
+.bdg.freeb{background:#173a2e;color:#6ee7b7}
+.ev.booked{background:var(--red-bg);border-color:#b04434;border-left-color:#ff7a66}
+.ev.booked .tm{color:#ffc9c0}
+.ev.booked .bdg{background:#fff;color:#8c2b20;border:0}
+.ev.optional{background:rgba(232,163,61,.06);border:1.5px dashed #8a6420;border-left:5px dashed var(--amber)}
+.ev.optional .tt{color:#f3e3c2}
+.ev.soldout{opacity:.55} .ev.soldout .tt{text-decoration:line-through}
+.ev.dimmed{opacity:.14}
+/* detail */
+.detail{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin:20px 0}
+.detail h2{margin:0 0 4px;font-size:22px;font-weight:900;letter-spacing:-.01em}
+.detail .meta{color:var(--muted);font-size:13px;font-weight:600;margin-bottom:14px}
+.detail ul{list-style:none;margin:0;padding:0;display:grid;gap:7px}
+.detail li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--panel2);border:1px solid var(--line2);border-left:5px solid var(--ac,#57534a)}
+.detail li.booked{background:var(--red-soft);border-color:#7a352b}
+.detail li.optional{border:1.5px dashed #8a6420;background:rgba(232,163,61,.05)}
+.tag{flex:0 0 auto;font-size:10px;font-weight:900;letter-spacing:.05em;padding:4px 7px;border-radius:999px;background:#3d3a36;color:var(--ink);text-transform:uppercase;margin-top:1px}
+li.booked .tag{background:var(--red);color:#fff} li.optional .tag{background:var(--amber);color:#171512}
+.transport{margin-top:14px;font-size:13.5px;color:var(--muted);border-top:1px dashed var(--line);padding-top:12px}
+.transport strong{color:var(--ink)}
+/* tickets */
+.tickets{margin:26px 0}
+.tickets h2{font-size:22px;font-weight:900;margin:0 0 6px;letter-spacing:-.01em}
+.tickets p{color:var(--muted);font-size:13.5px;margin:0 0 6px}
+.trow{display:grid;grid-template-columns:110px 1fr 110px 150px;gap:10px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:8px 0}
+@media(max-width:700px){.trow{grid-template-columns:1fr 1fr}.trow .tname{grid-column:1/-1}}
+.trow .date{font-weight:800;font-size:13px}
+.trow .tname{font-weight:700}.trow .tname span{display:block;font-weight:500;color:var(--muted);font-size:12.5px}
+.price{font-weight:800;text-align:right}.price span{display:block;font-size:11px;color:var(--muted);font-weight:600}
+.status{font-size:11px;font-weight:900;letter-spacing:.04em;text-transform:uppercase;text-align:center;padding:7px 8px;border-radius:999px}
+.status.booked{background:var(--red);color:#fff}
+.status.tobook{background:#f4efe8;color:#171512}
+.status.door{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.status.soldout{background:#57534a;color:#fff;text-decoration:line-through}
+.status.dropped{background:transparent;color:var(--muted);border:1.5px dashed var(--line);text-decoration:line-through}
+footer{color:var(--faint);font-size:12.5px;margin-top:26px;border-top:1px solid var(--line2);padding-top:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tophead">
+    <div>
+      <h1><span class="jp">日本旅行 — カレンダー</span>Japan Trip Calendar</h1>
+      <p class="sub"><strong>Wed Nov 25 – Fri Dec 11, 2026 · 4 travelers</strong> — Blake, brother, Usama &amp; Awais. Tokyo 6n → Kawaguchiko 1n → Kyoto 3n → Osaka 5n. A week-grid view, like a real calendar: pick a leg above, scroll sideways through the days, tap a day for its full plan and transport.</p>
+    </div>
+  </div>
+
+  <div class="alerts">
+    <div class="alert ok" role="note"><div style="font-size:20px">✓</div><div><b>DisneySea confirmed: Tue Dec 1</b><p>The Disney ticket is for <strong>Tuesday Dec 1</strong> — exactly as planned. No clash with the Mt. Fuji / Kawaguchiko overnight on Wed Dec 2, and no date change needed.</p></div></div>
+    <div class="alert ok" role="note"><div style="font-size:20px">✓</div><div><b>teamLab set is final: 2 venues</b><p><strong>teamLab Planets, Tokyo</strong> (Sat Nov 28, ~19:00) booked, and <strong>teamLab Biovortex, Kyoto</strong> (Sat Dec 5, <strong>17:30 entry</strong>) booked. <strong>Osaka teamLab Botanical Garden is dropped</strong> — it appears only as “Dropped” in the tickets list below, never as an activity.</p></div></div>
+  </div>
+
+  <div class="stays">
+    <div class="stay" style="--c:#3b82f6"><small>Tokyo · 6 nights</small><div>Hao Bros.Home Gemini</div><span>Takasago · Keisei-Takasago 5-min walk</span></div>
+    <div class="stay" style="--c:#22d3ee"><small>Fuji · 1 night · Dec 2</small><div>Fuyo No Yado</div><span>Fujiyoshida · Fuji-Q Highland stop 10–15 min walk</span></div>
+    <div class="stay" style="--c:#a78bfa"><small>Kyoto · 3 nights</small><div>Kyoto Kyo-Hiiragi</div><span>JR Nijo · Nakagyo</span></div>
+    <div class="stay" style="--c:#f472b6"><small>Osaka · 5 nights</small><div>Wolf Pack Apt 1001</div><span>Daikokucho · Midosuji line</span></div>
+  </div>
+
+  <div class="toolbar" role="group" aria-label="Calendar controls">
+    <button class="pill" data-range="all" aria-pressed="false">All 17 days</button>
+    <button class="pill" data-range="tokyo" aria-pressed="true">Nov 25–Dec 2 (Tokyo &amp; Fuji)</button>
+    <button class="pill" data-range="kyoto" aria-pressed="false">Dec 3–9 (Kyoto–Osaka)</button>
+    <button class="pill" data-range="home" aria-pressed="false">Dec 10–11 (Himeji &amp; Home)</button>
+    <span class="spacer"></span>
+    <button class="pill toggle" id="mustdoToggle" aria-pressed="false">★ Must-do only</button>
+    <button class="pill toggle" id="bookedToggle" aria-pressed="false">🎟 Booked only</button>
+  </div>
+  <div class="legend" aria-label="Legend">
+    <span><span class="sw"></span>Core / free</span>
+    <span><span class="sw paid"></span>¥ Paid — to book or at door</span>
+    <span><span class="sw booked"></span>🎟 Ticket booked (solid red)</span>
+    <span><span class="sw opt"></span>Optional — dashed, skip freely</span>
+    <span>Times are the planned schedule for each day, 6 AM–11 PM.</span>
+  </div>
+
+  <div class="cal-shell">
+    <div class="cal-scroll" id="calScroll">
+      <div class="cal" id="cal">
+        <div class="cal-head" id="calHead"></div>
+        <div class="cal-body" id="calBody"></div>
+      </div>
+    </div>
+  </div>
+
+  <section class="detail" id="detail" aria-live="polite"></section>
+
+  <section class="tickets">
+    <h2>Tickets &amp; paid activities</h2>
+    <p>Every paid stop on the trip in one list — what's already booked, what still needs booking, what's pay-at-the-door, and what's gone. Prices are per person unless noted.</p>
+    <div id="ticketList"></div>
+  </section>
+
+  <footer>Built from the living itinerary (last updated Nov 16, 2026 with the four locked-in stays). If a booking changes, this calendar needs the same edit. Day totals live in the written itinerary (~$1,050 pp for hotels + tickets + big transport, plus food/local transit).</footer>
+</div>
+
+<script>
+var START=6, HOUR=68;
+function hm(h){var hh=Math.floor(h), mm=Math.round((h-hh)*60); var ap=hh>=12?'PM':'AM'; var h12=hh%12; if(h12===0)h12=12; return h12+':'+String(mm).padStart(2,'0')+' '+ap;}
+function hm24(h){var hh=Math.floor(h), mm=Math.round((h-hh)*60); return String(hh).padStart(2,'0')+':'+String(mm).padStart(2,'0');}
+var DAYS=[
+{id:'2026-11-25',dow:'Wed',label:'Wed Nov 25',city:'Travel',ac:'#94a3b8',pace:'travel',paceLabel:'✈ Travel',title:'Travel day — Chicago → Tokyo',sleep:'In the air',total:'Flight day',range:'tokyo',transport:'Fly out 13:00 Chicago → Haneda, lands ~17:30 Thu Nov 26. Sleep plan: up late Tue, alarm 06:30–07:00, no naps.',events:[
+ {s:13,e:21,t:'Flight Chicago → Haneda',k:'paid',tag:'Paid',note:'Flights already booked · 13:00 departure'}]},
+{id:'2026-11-26',dow:'Thu',label:'Thu Nov 26',city:'Tokyo',ac:'#3b82f6',pace:'light',paceLabel:'🔋 Light',title:'Arrive Tokyo',sleep:'Tokyo · Gemini',total:'~$46 pp',range:'tokyo',transport:'Direct through-train Haneda → Keisei-Takasago (~1h, usually no transfer), then 5-min walk to Gemini.',events:[
+ {s:17,e:18,t:'Land Haneda ~5 p.m.',k:'free',tag:'Arrival'},
+ {s:18,e:19.25,t:'Airport train to Takasago',k:'paid',tag:'¥ Paid',note:'~¥1,040'},
+ {s:19.25,e:20,t:'Check in: Hao Bros.Home Gemini',k:'free',tag:'Stay',note:'6 nights · self check-in'},
+ {s:20,e:21.5,t:'Dinner + konbini run, early night',k:'free',tag:'Core'}]},
+{id:'2026-11-27',dow:'Fri',label:'Fri Nov 27',city:'Tokyo',ac:'#fb923c',pace:'light',paceLabel:'🔋 Light',title:'East Tokyo — easy pace',sleep:'Tokyo · Gemini',total:'~$48 pp',range:'tokyo',transport:'Gemini → Asakusa direct ~20 min (Asakusa line). Ueno minutes away; home via Keisei-Ueno direct ~25 min.',events:[
+ {s:9.5,e:11,t:'Senso-ji, Asakusa + Nakamise',k:'free',tag:'Core',note:'~1.5h'},
+ {s:11.08,e:12,t:'Kappabashi Kitchen Street',k:'free',tag:'Core',note:'Knives & kitchenware browsing'},
+ {s:12.08,e:12.67,t:'Sumida River walk',k:'free',tag:'Must-do',note:'~30 min toward Ueno'},
+ {s:12.75,e:13.75,t:'Ameyoko Market — lunch',k:'free',tag:'Core'},
+ {s:14,e:15.5,t:'Tokyo National Museum, Ueno',k:'paid',tag:'¥ At door',note:'¥1,000 · ~2h',cut:1},
+ {s:16,e:17.5,t:'Akihabara — only if energy is good',k:'optional',tag:'Optional'},
+ {s:18,e:19.5,t:'Ikebukuro (Pokémon Center / Animate)',k:'optional',tag:'Optional',note:'Only if energy remains'}]},
+{id:'2026-11-28',dow:'Sat',label:'Sat Nov 28',city:'Tokyo',ac:'#e879f9',pace:'medium',paceLabel:'⚡ Medium',title:'The bay day',sleep:'Tokyo · Gemini',total:'~$70 pp',range:'tokyo',transport:'Gemini → Higashi-Ginza direct ~30 min. Bay hops on Yurikamome: Ariake → Odaiba → Toyosu. Home from Toyosu ~50 min via Shimbashi.',events:[
+ {s:10,e:12,t:'Tsukiji Outer Market 🍜',k:'optional',tag:'Optional 🍜',note:'Halal-simple seafood · stalls wind down ~14:00'},
+ {s:12.25,e:13.5,t:'⭐ Louis Vuitton Ginza + Le Café V',k:'optional',tag:'Optional',note:'Go for the building · 2nd chance Dec 6 in Osaka'},
+ {s:14.25,e:16,t:'Tokyo Rinkai Disaster Prevention Park, Ariake',k:'free',tag:'Free',note:'72h earthquake tour · last entry 16:30'},
+ {s:16.5,e:17.5,t:'Unicorn Gundam, Odaiba',k:'free',tag:'Free',note:'Transforms on the hour'},
+ {s:19,e:21,t:'teamLab Planets, Toyosu',k:'booked',tag:'🎟 Booked',note:'¥4,400 · BOOKED · ~19:00 · barefoot, water to knees, 1.5–2h'}]},
+{id:'2026-11-29',dow:'Sun',label:'Sun Nov 29',city:'Tokyo',ac:'#a78bfa',pace:'medium',paceLabel:'⚡ Medium',title:'West side + Shinjuku night',sleep:'Tokyo · Gemini',total:'~$64 pp',range:'tokyo',transport:'Gemini → Shimbashi direct, Yamanote to Harajuku — ~55–60 min door-to-door. Harajuku → Shinjuku is ~10 min on the Yamanote, so the evening flows west in one line. Last trains home ~23:30–00:00.',events:[
+ {s:10,e:11,t:'Meiji Shrine',k:'free',tag:'Core',note:'Sunday wedding processions likely late morning'},
+ {s:11.08,e:12.25,t:'Harajuku / Takeshita St',k:'free',tag:'Core',note:'Sunday fashion crowd · then Omotesando'},
+ {s:12.5,e:13.25,t:'Yoyogi Park rockabillies + Omotesando stroll',k:'free',tag:'Core',note:'Sunday-only rockabilly dancers by the park entrance'},
+ {s:14,e:16,t:'Flex catch-up — Ikebukuro / Akihabara / shopping',k:'optional',tag:'Optional',note:'Squeezed in here from Nov 30 if wanted · or rest back at Takasago'},
+ {s:19,e:20,t:'Golden Gai stroll, Shinjuku',k:'free',tag:'Must-do',note:'Moved from Nov 30 · evening · 30–45 min'},
+ {s:20.15,e:21.25,t:'Shinjuku-tei — halal wagyu ramen 🍜',k:'optional',tag:'Optional 🍜',note:'Moved from Nov 30'}]},
+{id:'2026-11-30',dow:'Mon',label:'Mon Nov 30',city:'Tokyo',ac:'#a3b81c',pace:'medium',paceLabel:'⚡ Medium',title:'Shibuya day — Sky 17:20',sleep:'Tokyo · Gemini',total:'~$61 pp',range:'tokyo',transport:'Bags ship to Kyoto in the morning (Yamato office pickup — both stays are unstaffed). Then Gemini → Shibuya ~55 min via Shimbashi / Yamanote. SHIBU NIWA (17F Shibuya Fukuras) for the sunset, Sky entry 17:20 right after. Early night — DisneySea starts with a 07:15 departure tomorrow.',events:[
+ {s:9,e:10,t:'Ship big bags to Kyoto',k:'paid',tag:'¥ Paid',note:'~¥3,000 · Yamato office drop-off'},
+ {s:11,e:11.5,t:'Shibuya Crossing + Hachiko',k:'free',tag:'Core',note:'Moved from Nov 29'},
+ {s:11.58,e:12.5,t:'Mega Don Quijote Shibuya',k:'free',tag:'Core',note:'Flagship store browsing'},
+ {s:13,e:14.5,t:'Nintendo Tokyo + Pokémon Center, Shibuya Parco',k:'free',tag:'Core',note:'Moved from Nov 29 · + free 10F rooftop park'},
+ {s:16,e:16.67,t:'SHIBU NIWA free rooftop — sunset',k:'free',tag:'Free',note:'17F Shibuya Fukuras — view over the Crossing · sunset ~16:28 · moved from Nov 29'},
+ {s:17.33,e:18.75,t:'Shibuya Sky',k:'booked',tag:'🎟 Booked',note:'¥3,400 · BOOKED Mon Nov 30 · entry 17:20–17:39 · sunset ~16:28 → blue-hour / night lights · no exit limit · passports required at entry'},
+ {s:19,e:20.5,t:'Gyumon Shibuya — halal wagyu yakiniku 🍜',k:'optional',tag:'Optional 🍜',note:'Moved from Nov 29 · courses ~¥3,000–4,000 · reserve if group wants it · Starbucks Reserve Roastery after only if energy holds — early night before DisneySea'}]},
+{id:'2026-12-01',dow:'Tue',label:'Tue Dec 1',city:'Tokyo',ac:'#22d3ee',pace:'heavy',paceLabel:'🔥 Heavy',title:'DisneySea',sleep:'Tokyo · Gemini',total:'~$112 pp',range:'tokyo',transport:'Leave Gemini ~07:15. Keisei → Funabashi → JR → Maihama → Disney Resort Line: ~65–70 min, 2 changes, ~¥700 each way.',events:[
+ {s:9,e:21,t:'Tokyo DisneySea',k:'booked',tag:'🎟 Booked',note:'¥10,900 · BOOKED Tue Dec 1 · 9:00–21:00 · Fantasy Springs · Believe! show 19:30'}]},
+{id:'2026-12-02',dow:'Wed',label:'Wed Dec 2',city:'Fuji · Fujiyoshida',ac:'#06b6d4',pace:'medium',paceLabel:'⚡ Medium',title:'Mt. Fuji overnight',sleep:'Fujiyoshida · Fuyo No Yado',total:'~$72 pp (Fuji day)',range:'tokyo',transport:'Leave Gemini ~07:30 → Busta Shinjuku for the 09:15 bus → Kawaguchiko 11:00 (BOOKED). Ropeway + lake first, then ~10 min down to Fujiyoshida; Fuyo is a 5-min taxi from Fujisan Station, Chureito ~5 min from the house.',events:[
+ {s:9.25,e:11,t:'Highway bus Shinjuku → Kawaguchiko',k:'booked',tag:'🎟 Booked',note:'09:15 from Busta Shinjuku → 11:00 · ¥2,000 web fare · BOOKED (bus 1153)'},
+ {s:11.5,e:12.75,t:'Mt. Fuji Panoramic Ropeway first',k:'paid',tag:'¥ At door',note:'¥1,200 · last descent ~16:20 in winter'},
+ {s:13,e:14,t:'Lake Kawaguchiko',k:'free',tag:'Core'},
+ {s:14.25,e:15.25,t:'Halal hōtō lunch: T&T Fujiyama (Fujiyoshida)',k:'paid',tag:'¥ At door',note:'Halal-certified hōtō · 11:00–16:00 · ~¥1,000–2,000'},
+ {s:15.5,e:16.25,t:'Check in: Fuyo No Yado',k:'free',tag:'Stay',note:'Front desk 15:30–18:00 · whole log house · BOOKED'},
+ {s:16.5,e:17.75,t:'Chureito Pagoda at sunset',k:'free',tag:'Core',note:'~5 min from the house'},
+ {s:18.5,e:20,t:'Soak: private tub + Resort Inn Fuyo public bath',k:'optional',tag:'Optional',note:'Public bath next door is free for log-house guests'}]},
+{id:'2026-12-03',dow:'Thu',label:'Thu Dec 3',city:'Kyoto',ac:'#c084fc',pace:'heavy',paceLabel:'🔥 Heavy',title:'Fujiyoshida → Kyoto + downtown',sleep:'Kyoto · Kyo-Hiiragi',total:'~$141 pp',range:'kyoto',transport:'Walk 10–15 min to Fuji-Q Highland stop → 10:05 Mishima liner (board there) → Mishima North Exit 11:25 → Hikari 11:46 → Kyoto 13:37 (BOOKED — 21-min connection, QR codes ready). Stay is near JR Nijo (~5 min by JR from Kyoto Station + 5-min walk); check-in online registration + private entrance.',events:[
+ {s:6.5,e:7.5,t:'Sunrise Fuji viewing — house / Chureito',k:'free',tag:'Core',note:'Chureito ~5 min from Fuyo'},
+ {s:10.08,e:13.62,t:'Mishima liner bus + Hikari shinkansen',k:'booked',tag:'🎟 Booked',note:'10:05 from Fuji-Q Highland → Mishima North 11:25 · ¥2,500 + ~¥10,780 = ~¥13,280 · BOOKED · get off at North Exit'},
+ {s:13.75,e:14.25,t:'Kyoto Station Skywalk',k:'free',tag:'Free'},
+ {s:14.5,e:15.75,t:'Nishiki Market',k:'free',tag:'Must-do',note:'1–1.5h'},
+ {s:16,e:17.25,t:'Samurai & Ninja Museum',k:'paid',tag:'¥ Book ahead',note:'~¥3,300 online (door ~¥4,400) · shuriken, blowgun, armor'},
+ {s:17.5,e:19,t:'Kimono keepsake: Hoippo → Chicago Kyoto',k:'optional',tag:'Optional',note:'Hoippo closes 19:00 · kimono from ¥8,800'},
+ {s:19.25,e:20.5,t:'Pontocho Alley + Kamo River at dusk',k:'free',tag:'Core'}]},
+{id:'2026-12-04',dow:'Fri',label:'Fri Dec 4',city:'Kyoto',ac:'#f472b6',pace:'heavy',paceLabel:'🔥 Heavy',title:'Kyoto temples — Fushimi & Higashiyama',sleep:'Kyoto · Kyo-Hiiragi',total:'~$42 pp',range:'kyoto',transport:'Leave ~07:15: JR Nijo → Kyoto Station (~5 min) → Nara line to Inari (~25–30 min). Home from Gion ~25 min via Keihan + Tozai subway.',events:[
+ {s:8,e:10,t:'Fushimi Inari',k:'free',tag:'Core',note:'08:00 start, before the worst crowds'},
+ {s:10.5,e:11.75,t:'Kiyomizu-dera',k:'paid',tag:'¥ At door',note:'¥500'},
+ {s:11.75,e:13,t:'Sannenzaka / Ninenzaka + tatami Starbucks',k:'free',tag:'Core'},
+ {s:13.25,e:14.25,t:'Tea ceremony (~1h)',k:'optional',tag:'Optional',note:'+¥4,000'},
+ {s:14.5,e:15.5,t:'Kimono rental',k:'optional',tag:'Optional',note:'+~¥3,100'},
+ {s:17,e:18.5,t:'Yasaka Shrine at dusk + Gion / Kennin-ji',k:'free',tag:'Core'},
+ {s:18.75,e:20,t:'Kodai-ji night illumination',k:'paid',tag:'¥ At door',note:'¥800'}]},
+{id:'2026-12-05',dow:'Sat',label:'Sat Dec 5',city:'Kyoto',ac:'#a78bfa',pace:'heavy',paceLabel:'🔥 Heavy',title:'Arashiyama + teamLab Biovortex 17:30',sleep:'Kyoto · Kyo-Hiiragi',total:'~$82 pp',range:'kyoto',transport:'JR Nijo is on the Sagano line — direct ~15 min to Saga-Arashiyama. Biovortex is 7 min from Kyoto Station; home is a ~5-min JR hop to Nijo.',events:[
+ {s:8.5,e:10.5,t:'Bamboo Grove + Tenryu-ji',k:'paid',tag:'¥ At door',note:'Tenryu-ji ¥800'},
+ {s:10.75,e:11.75,t:'Okochi Sanso villa garden',k:'paid',tag:'¥ At door',note:'¥1,000 · matcha + wafer included'},
+ {s:12,e:13,t:'Lunch: Shigetsu (shojin) or Yoshiya (halal) 🍜',k:'optional',tag:'Optional 🍜',note:'Yoshiya halal sets from ~¥1,350'},
+ {s:13.25,e:14,t:'Togetsukyo Bridge + riverside',k:'free',tag:'Core'},
+ {s:14.5,e:15.75,t:'Kinkaku-ji (Golden Pavilion)',k:'paid',tag:'¥ At door',note:'¥500 · taxi hop from Arashiyama'},
+ {s:16,e:17,t:'Sagano Romantic Train (Torokko)',k:'optional',tag:'Optional — sold out',note:'¥880 · SOLD OUT Dec 5 — only if a cancellation opens 4 seats',soldout:1},
+ {s:17.5,e:20.5,t:'teamLab Biovortex Kyoto — 17:30 entry',k:'booked',tag:'🎟 Booked',note:'~¥5,200 Sat band · BOOKED 17:30 · ~3h, closes 21:00'}]},
+{id:'2026-12-06',dow:'Sun',label:'Sun Dec 6',city:'Osaka',ac:'#fb7185',pace:'heavy',paceLabel:'🔥 Heavy',title:'Kyoto → Osaka via Evangelion',sleep:'Osaka · Wolf Pack',total:'~$78 pp (Blake)',range:'kyoto',transport:'Eikan-do ~30 min from Hiiragi (Tozai subway to Keage + walk, or taxi split 4 ways). Keihan Premium Car south; Yodoyabashi → Daikokucho 4 stops. Bags ship from Yamato Kyoto Nijo Center to the Kizuichiba Center pickup (arrive Dec 7).',events:[
+ {s:9,e:10.5,t:'Eikan-do (last autumn day)',k:'paid',tag:'¥ At door',note:'¥1,500'},
+ {s:10.75,e:12,t:'Nanzen-ji + aqueduct + Philosopher\u2019s Path',k:'free',tag:'Free'},
+ {s:12.5,e:13.25,t:'Keihan Premium Car to Hirakata',k:'paid',tag:'¥ Paid',note:'+¥400–500 supplement'},
+ {s:13.5,e:15,t:'ALL OF EVANGELION exhibition',k:'paid',tag:'¥ Paid',note:'¥2,400 door / ¥2,200 advance · friend\u2019s pick · last day before Dec 7–11 closure'},
+ {s:15.25,e:16.25,t:'Blake instead: Osaka Science Museum + planetarium',k:'paid',tag:'¥ Book Nov 29',note:'Runs parallel — Blake splits from the group · ¥400 + ¥600 · planetarium tickets on sale 7 days ahead, buy morning of Nov 29'},
+ {s:16.5,e:17.25,t:'Check in: Wolf Pack Apartment 1001',k:'free',tag:'Stay',note:'~16:30 · Daikokucho'},
+ {s:17.5,e:19,t:'Dotonbori / Shinsaibashi night',k:'free',tag:'Must-do'},
+ {s:19.25,e:19.75,t:'Tombori River Cruise',k:'paid',tag:'¥ Paid',note:'¥2,000 · 20-min boat · evening boats fill first'},
+ {s:20,e:21,t:'Louis Vuitton Maison Osaka + Le Café V',k:'optional',tag:'Optional',note:'2nd chance if Ginza was missed Nov 28'}]},
+{id:'2026-12-07',dow:'Mon',label:'Mon Dec 7',city:'Osaka',ac:'#fbbf24',pace:'medium',paceLabel:'⚡ Medium',title:'Osaka Castle, markets & Round1',sleep:'Osaka · Wolf Pack',total:'~$45 pp',range:'kyoto',transport:'All local from Daikokucho. Castle ~20 min via Hommachi. Morning errand: pick up shipped bags at Yamato Kizuichiba Center (~10-min walk, passport + waybill).',events:[
+ {s:9,e:9.75,t:'Pick up bags — Yamato Kizuichiba Center',k:'free',tag:'Errand',note:'~10-min walk · passport + waybill'},
+ {s:10,e:12,t:'Osaka Castle (park + museum)',k:'paid',tag:'¥ At door',note:'¥1,200'},
+ {s:12.25,e:13.5,t:'Kuromon Market lunch',k:'free',tag:'Must-do'},
+ {s:14,e:16,t:'Shinsekai / Tsutenkaku + Den Den Town',k:'free',tag:'Core'},
+ {s:18,e:21,t:'Round1 Stadium Sennichimae — Spo-Cha 3h',k:'paid',tag:'¥ At door',note:'~¥2,690 · open 24h, no booking'}]},
+{id:'2026-12-08',dow:'Tue',label:'Tue Dec 8',city:'Nara',ac:'#34d399',pace:'medium',paceLabel:'⚡ Medium',title:'Nara day trip',sleep:'Osaka · Wolf Pack',total:'~$42 pp',range:'kyoto',transport:'Daikokucho → Namba 1 stop, Kintetsu to Nara ~35 min. Aoniyoshi 09:10 outbound is sold out; 17:36 return Twin booths were still open — decision pending.',events:[
+ {s:9,e:9.75,t:'Kintetsu limited express to Nara',k:'paid',tag:'¥ Paid',note:'~¥1,130 outbound'},
+ {s:10,e:10.5,t:'Nakatanidou mochi-pounding',k:'free',tag:'Core'},
+ {s:10.75,e:13,t:'Deer park + Todai-ji / Great Buddha',k:'paid',tag:'¥ At door',note:'Todai-ji ¥800'},
+ {s:13.25,e:14.25,t:'Nara Halal Restaurant lunch 🍜',k:'optional',tag:'Optional 🍜',note:'Fully halal · curries/kebabs ~¥2,000 · A5 wagyu ramen ¥4,500 is a splurge, not default'},
+ {s:14.5,e:16,t:'Kasuga Taisha',k:'free',tag:'Core'},
+ {s:17.6,e:18.25,t:'Aoniyoshi 17:36 return',k:'optional',tag:'Optional',note:'¥1,410 · Twin booths if booked — decision pending'}]},
+{id:'2026-12-09',dow:'Wed',label:'Wed Dec 9',city:'Osaka',ac:'#60a5fa',pace:'medium',paceLabel:'⚡ Medium',title:'Osaka must-dos: aquarium + sky',sleep:'Osaka · Wolf Pack',total:'~$56 pp',range:'kyoto',transport:'Kaiyukan: Daikokucho → Hommachi → Osakako ~30 min. Umeda Sky: Midosuji direct ~12 min to Umeda.',events:[
+ {s:10,e:12.5,t:'Kaiyukan Aquarium — 10:00 entry',k:'paid',tag:'¥ Book ahead',note:'~¥2,700 (dynamic to ¥3,200) · date/time e-ticket'},
+ {s:12.75,e:13.5,t:'Tempozan Ferris wheel',k:'paid',tag:'¥ At door',note:'¥900 · same complex'},
+ {s:14,e:15.5,t:'America-mura',k:'optional',tag:'Optional',note:'If energy holds'},
+ {s:16.25,e:18,t:'Umeda Sky Building — sunset',k:'paid',tag:'¥ At door',note:'¥2,000 · up ~16:15'},
+ {s:18.5,e:19.75,t:'Ali\u2019s Kitchen — halal, Bib Gourmand 🍜',k:'optional',tag:'Optional 🍜',note:'Shinsaibashi, on the way back'}]},
+{id:'2026-12-10',dow:'Thu',label:'Thu Dec 10',city:'Himeji',ac:'#facc15',pace:'light',paceLabel:'🔋 Light',title:'Himeji Castle + free evening',sleep:'Osaka · Wolf Pack',total:'~$52 pp',range:'home',transport:'Out ~08:00: Daikokucho → Umeda, JR Special Rapid ~1h to Himeji (¥1,520 each way). Kobe is ~40 min back toward Osaka. Osaka teamLab Botanical was dropped — evening is free for packing.',events:[
+ {s:8,e:9.25,t:'JR Special Rapid Osaka → Himeji',k:'paid',tag:'¥ Paid',note:'Part of ~¥3,040 round trip'},
+ {s:9.25,e:11.5,t:'Himeji Castle',k:'paid',tag:'¥ At door',note:'¥1,000 · Kokoen combo ¥1,050 · 09:15–11:30'},
+ {s:13,e:16.5,t:'Kobe add-on: Kitano, Mosque, Meriken Park',k:'optional',tag:'Optional',note:'Only if energy holds · ~¥800 transit · be back ~17:00'},
+ {s:18,e:20,t:'Free evening — laundry, packing, souvenirs',k:'free',tag:'Core',note:'Osaka teamLab Botanical: DROPPED'}]},
+{id:'2026-12-11',dow:'Fri',label:'Fri Dec 11',city:'Travel',ac:'#94a3b8',pace:'travel',paceLabel:'✈ Travel',title:'Home — Osaka → Haneda → Chicago',sleep:'Home',total:'~$86 pp',range:'home',transport:'Check out 10:00. Midosuji Daikokucho → Shin-Osaka direct ~25 min, no transfer — with all 6 checked bags. Shinkansen ~12:30 (BOOKED — Nozomi) → Shinagawa ~14:45 → Keikyu to Haneda ~15:15 for the ~6 p.m. flight.',events:[
+ {s:10,e:10.5,t:'Check out — Wolf Pack',k:'free',tag:'Stay',note:'10:00 checkout'},
+ {s:12.5,e:14.75,t:'Shinkansen Shin-Osaka → Shinagawa ~12:30',k:'booked',tag:'🎟 Booked',note:'¥12,980 Hayatoku 21 · BOOKED via SmartEX · Nozomi, oversized-bag seats'},
+ {s:15,e:15.5,t:'Keikyu Shinagawa → Haneda',k:'paid',tag:'¥ Paid',note:'~¥300'},
+ {s:18,e:20,t:'Flight home ~6 p.m.',k:'free',tag:'Departure'}]}
+];
+var TICKETS=[
+ {date:'Sat Nov 28',name:'teamLab Planets, Tokyo',sub:'Evening slot ~19:00 · Toyosu · barefoot, water to knees',price:'¥4,400',status:'booked',label:'🎟 Booked'},
+ {date:'Mon Nov 30',name:'Shibuya Sky',sub:'Entry 17:20–17:39 · sunset ~16:28 → blue-hour / night lights · no exit limit · passports required at entry',price:'¥3,400',status:'booked',label:'🎟 Booked'},
+ {date:'Tue Dec 1',name:'DisneySea',sub:'Booked for Tue Dec 1 — exactly as planned · 9:00–21:00',price:'¥10,900',status:'booked',label:'🎟 Booked'},
+ {date:'Sat Dec 5',name:'teamLab Biovortex, Kyoto',sub:'17:30 entry · 7 min from Kyoto Station · closes 21:00',price:'~¥5,200',status:'booked',label:'🎟 Booked 17:30'},
+ {date:'Wed Dec 2',name:'Fuji highway bus',sub:'09:15 Busta Shinjuku → Kawaguchiko 11:00 · one way · bus 1153',price:'¥2,000',status:'booked',label:'🎟 Booked'},
+ {date:'Thu Dec 3',name:'Mishima liner + Hikari to Kyoto',sub:'10:05 bus from Fuji-Q Highland → Mishima North 11:25 + Hikari 11:46 via SmartEX',price:'~¥13,280',status:'booked',label:'🎟 Booked'},
+ {date:'Thu Dec 3',name:'Samurai & Ninja Museum',sub:'Online beats door price (~¥4,400)',price:'~¥3,300',status:'tobook',label:'Book ahead'},
+ {date:'Wed Dec 9',name:'Kaiyukan Aquarium',sub:'10:00 entry · date/time e-ticket, on sale ~30 days ahead',price:'~¥2,700',status:'tobook',label:'Book ahead'},
+ {date:'Fri Dec 11',name:'Shinkansen Shin-Osaka → Shinagawa',sub:'Nozomi ~12:30 → ~14:45 · Hayatoku 21 · oversized-bag seats · via SmartEX',price:'¥12,980',status:'booked',label:'🎟 Booked'},
+ {date:'Various',name:'Temples, museums, ropeway, Round1, Umeda Sky, Tombori Cruise, Evangelion…',sub:'Pay at the door / walk-up — see each day for its price',price:'¥400–2,690',status:'door',label:'At door'},
+ {date:'Sat Dec 5',name:'Sagano Romantic Train (Torokko)',sub:'Every departure sold out both directions (checked Nov 10)',price:'¥880',status:'soldout',label:'Sold out'},
+ {date:'Thu Dec 10',name:'teamLab Botanical Garden, Osaka',sub:'Dropped Nov 15 — final teamLabs are Planets + Biovortex only',price:'¥2,200',status:'dropped',label:'Dropped'}
+];
+var state={range:'tokyo',mustdo:false,bookedOnly:false,selected:'2026-11-28'};
+function esc(s){return s.replace(/&/g,'&amp;');}
+function badges(e,tall){
+  var b='';
+  if(e.k==='booked') b+='<span class="bdg">🎟 Booked</span>';
+  if(e.k==='paid') b+='<span class="bdg yen">¥ Paid</span>';
+  if(e.k==='optional') b+='<span class="bdg opt">Optional</span>';
+  if(e.k==='free') b+='<span class="bdg freeb">Free</span>';
+  if(e.cut) b+='<span class="bdg cut">✂ Likely cut</span>';
+  if(e.soldout) b+='<span class="bdg cut">Sold out</span>';
+  return tall&&b?'<span class="badges">'+b+'</span>':'';
+}
+function renderCal(){
+  var days=DAYS.filter(function(d){return state.range==='all'||d.range===state.range;});
+  var cal=document.getElementById('cal');
+  cal.style.setProperty('--n',days.length);
+  var head='<div class="gutter"></div>'+days.map(function(d){
+    return '<button class="dhead'+(d.id===state.selected?' selected':'')+'" data-day="'+d.id+'" style="--ac:'+d.ac+'" aria-label="Show '+esc(d.label)+'">'
+      +'<span class="dow"><span class="dot"></span>'+d.label.toUpperCase()+' <span class="pace '+d.pace+'">'+d.paceLabel+'</span></span>'
+      +'<span class="dtitle" style="display:block">'+esc(d.title)+'</span>'
+      +'<span class="sleep" style="display:block">🛏 '+esc(d.sleep)+' · '+esc(d.total)+'</span>'
+      +(d.clash?'<span class="clash" style="display:block">'+esc(d.clash)+'</span>':'')
+      +'</button>';
+  }).join('');
+  document.getElementById('calHead').innerHTML=head;
+  var gut='<div class="gutter">';
+  for(var h=START;h<=23;h++){ gut+='<span style="top:'+((h-START)*HOUR)+'px">'+hm(h)+'</span>'; }
+  gut+='</div>';
+  var cols=days.map(function(d){
+    var evs=d.events.map(function(e){
+      var top=(e.s-START)*HOUR+3, height=Math.max((e.e-e.s)*HOUR-6,46);
+      var dim=(state.mustdo&&e.k==='optional')||(state.bookedOnly&&e.k!=='booked');
+      var cls='ev '+e.k+(e.soldout?' soldout':'')+(dim?' dimmed':'');
+      return '<button class="'+cls+'" data-day="'+d.id+'" style="--ac:'+d.ac+';top:'+top+'px;height:'+height+'px">'
+        +'<span class="tm" style="display:block">'+hm24(e.s)+'–'+hm24(e.e)+'</span>'
+        +'<span class="tt" style="display:block">'+esc(e.t)+'</span>'
+        +badges(e,height>=64)
+        +'</button>';
+    }).join('');
+    return '<div class="col">'+evs+'</div>';
+  }).join('');
+  document.getElementById('calBody').innerHTML=gut+cols;
+  document.querySelectorAll('[data-day]').forEach(function(el){
+    el.addEventListener('click',function(){ state.selected=el.getAttribute('data-day'); renderCal(); showDay(state.selected); });
+  });
+}
+var detail=document.getElementById('detail');
+function showDay(key){
+  var day=null; DAYS.forEach(function(d){ if(d.id===key) day=d; }); if(!day) return;
+  var lis=day.events.map(function(e){
+    return '<li class="'+e.k+'" style="--ac:'+day.ac+'"><span class="tag">'+(e.tag||e.k)+'</span><span><strong>'+hm24(e.s)+'–'+hm24(e.e)+' · '+esc(e.t)+'</strong>'+(e.note?'<br><span style="opacity:.85;font-size:13px">'+esc(e.note)+'</span>':'')+'</span></li>';
+  }).join('');
+  detail.innerHTML='<h2>'+esc(day.title)+'</h2><div class="meta">'+esc(day.label)+', 2026 · Sleep: '+esc(day.sleep)+' · Pace: '+day.paceLabel+' · Day total '+esc(day.total)+'</div><ul>'+lis+'</ul>'
+    +'<p class="transport">🚆 <strong>Getting around:</strong> '+esc(day.transport)+'</p>';
+}
+document.querySelectorAll('[data-range]').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('[data-range]').forEach(function(b){b.setAttribute('aria-pressed','false')});
+    btn.setAttribute('aria-pressed','true');
+    state.range=btn.getAttribute('data-range');
+    renderCal();
+    document.getElementById('calScroll').scrollLeft=0;
+  });
+});
+document.getElementById('mustdoToggle').addEventListener('click',function(){
+  state.mustdo=!state.mustdo; this.setAttribute('aria-pressed',state.mustdo?'true':'false'); renderCal();
+});
+document.getElementById('bookedToggle').addEventListener('click',function(){
+  state.bookedOnly=!state.bookedOnly; this.setAttribute('aria-pressed',state.bookedOnly?'true':'false'); renderCal();
+});
+renderCal();
+showDay(state.selected);
+document.getElementById('ticketList').innerHTML=TICKETS.map(function(t){
+  return '<div class="trow"><div class="date">'+t.date+'</div><div class="tname">'+t.name+'<span>'+t.sub+'</span></div><div class="price">'+t.price+'<span>per person</span></div><div class="status '+t.status+'">'+t.label+'</div></div>';
+}).join('');
+</script>
+</body>
+</html>
